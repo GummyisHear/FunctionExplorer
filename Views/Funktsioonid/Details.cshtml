@@ -1,0 +1,33 @@
+﻿@model FunctionExplorer.Models.FunktsiooniUurimine
+<h1>f(x) = @Model.Valem</h1>
+<dl class="row">
+    <dt class="col-sm-3">Määramispiirkond</dt>
+    <dd class="col-sm-9">@Model.Maaramispiirkond</dd>
+    <dt class="col-sm-3">Nullkohad</dt>
+    <dd class="col-sm-9">@Model.Nullkohad</dd>
+    <dt class="col-sm-3">Tuletis f'(x)</dt>
+    <dd class="col-sm-9">@Model.Tuletis</dd>
+    <dt class="col-sm-3">Kriitilised punktid</dt>
+    <dd class="col-sm-9">@Model.KriitilisedPunktid</dd>
+    <dt class="col-sm-3">Ekstreemumid</dt>
+    <dd class="col-sm-9">@Model.Ekstreemumid</dd>
+</dl>
+
+<div class="mb-2">
+    x: <input id="alates" type="number" value="-5" step="1" style="width:80px" />
+    kuni <input id="kuni" type="number" value="5" step="1" style="width:80px" />
+    <button id="uuenda" class="btn btn-sm btn-secondary">Joonista</button>
+</div>
+<canvas id="funktsiooniGraafik" width="600" height="400"></canvas>
+<p class="mt-3"><a asp-action="Index">Tagasi nimekirja</a></p>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="~/js/graafik.js"></script>
+    <script>
+        const valem = @Json.Serialize(Model.Valem);
+        const uuenda = () => joonista(valem, parseFloat(alates.value), parseFloat(kuni.value));
+        document.getElementById('uuenda').addEventListener('click', uuenda);
+        uuenda();
+    </script>
+}

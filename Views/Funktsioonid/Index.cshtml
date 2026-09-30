@@ -1,0 +1,25 @@
+﻿@model IEnumerable<FunctionExplorer.Models.FunktsiooniUurimine>
+<h1>Funktsioonide uuringud</h1>
+<p><a asp-action="Create" class="btn btn-primary">Uus funktsioon</a></p>
+<table class="table">
+    <thead><tr><th>Valem</th><th>Nullkohad</th><th>Ekstreemumid</th><th>Loodud</th><th></th></tr></thead>
+    <tbody>
+        @foreach (var f in Model)
+        {
+            <tr>
+                <td>@f.Valem</td>
+                <td>@f.Nullkohad</td>
+                <td>@f.Ekstreemumid</td>
+                <td>@f.LuodudAeg.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
+                <td class="d-flex gap-1">
+                    <a asp-action="Details" asp-route-id="@f.Id" class="btn btn-sm btn-info">Vaata</a>
+                    <a asp-action="Edit" asp-route-id="@f.Id" class="btn btn-sm btn-warning">Muuda</a>
+                    <form asp-action="Delete" asp-route-id="@f.Id" method="post"
+                          onsubmit="return confirm('Kustutada?');">
+                        <button class="btn btn-sm btn-danger">Kustuta</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
