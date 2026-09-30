@@ -13,21 +13,21 @@
     <dd class="col-sm-9">@Model.Ekstreemumid</dd>
 </dl>
 
-<div class="mb-2">
-    x: <input id="alates" type="number" value="-5" step="1" style="width:80px" />
-    kuni <input id="kuni" type="number" value="5" step="1" style="width:80px" />
-    <button id="uuenda" class="btn btn-sm btn-secondary">Joonista</button>
+<div class="mb-2 d-flex align-items-center gap-2">
+    <button id="lahtesta" class="btn btn-sm btn-secondary">Taasta</button>
+    <small class="text-muted">Suumimiseks kerige, pildi nihutamiseks lohistage, taastamiseks topeltklõpsake</small>
 </div>
 <canvas id="funktsiooniGraafik" width="600" height="400"></canvas>
 <p class="mt-3"><a asp-action="Index">Tagasi nimekirja</a></p>
 
 @section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1"></script>
     <script src="~/js/graafik.js"></script>
     <script>
         const valem = @Json.Serialize(Model.Valem);
-        const uuenda = () => joonista(valem, parseFloat(alates.value), parseFloat(kuni.value));
-        document.getElementById('uuenda').addEventListener('click', uuenda);
-        uuenda();
+        joonista(valem);
+        document.getElementById('lahtesta').addEventListener('click', lahtestaVaade);
     </script>
 }
