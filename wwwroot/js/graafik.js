@@ -5,7 +5,7 @@ const PUNKTE = 1000;
 
 async function joonista(valem) {
     praeguneValem = valem;
-    const a = await too(-15, 15);            // wide first load, view shows [-5; 5]
+    const a = await too(-15, 15);
     if (!a) return;
 
     const [yMin, yMax] = sobitaY(a, -5, 5);
