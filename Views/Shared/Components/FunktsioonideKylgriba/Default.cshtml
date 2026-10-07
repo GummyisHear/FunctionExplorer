@@ -1,0 +1,20 @@
+@model List<FunctionExplorer.ViewComponents.KylgribaKirje>
+
+<div class="kylgriba-otsing">
+    <input type="search" id="kylgribaOtsing" class="form-control form-control-sm"
+           placeholder="Otsi funktsiooni..." autocomplete="off" aria-label="Otsi funktsiooni" />
+</div>
+
+<div class="list-group list-group-flush kylgriba-nimekiri" id="kylgribaNimekiri">
+    @foreach (var f in Model)
+    {
+        <a asp-controller="Funktsioonid" asp-action="Details" asp-route-id="@f.Id"
+           class="list-group-item list-group-item-action py-2"
+           data-valem="@f.Valem">f(x) = @f.Valem</a>
+    }
+</div>
+<p id="kylgribaTuhi" class="text-muted small mt-2 @(Model.Count == 0 ? "" : "d-none")">Funktsioone ei leitud.</p>
+
+<div class="kylgriba-jalus">
+    <a asp-controller="Funktsioonid" asp-action="Create" class="btn btn-primary btn-sm w-100">Uus funktsioon</a>
+</div>

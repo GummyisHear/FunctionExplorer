@@ -4,7 +4,7 @@ using System.Globalization;
 
 namespace FunctionExplorer.Utils;
 
-public static class MathUtils
+public static partial class MathUtils
 {
     static readonly SymbolicExpression X = SymbolicExpression.Variable("x");
 
@@ -103,7 +103,7 @@ public static class MathUtils
         {
             Valem = valem.Trim(),
             Maaramispiirkond = Maaramispiirkond(f),
-            Tuletis = d.ToString(),
+            Tuletis = Lihtsusta(d).ToString(),
             Nullkohad = nullid.Count == 0 ? "(vahemikus [-10; 10] puuduvad)" : "x = " + string.Join("; ", nullid.Select(Ar)),
             KriitilisedPunktid = krit.Count == 0 ? "puuduvad" : string.Join("; ", krit.Select((c, i) => $"x{i + 1} = {Ar(c)}")),
             Ekstreemumid = ekstr.Count == 0 ? "puuduvad" : string.Join("; ", ekstr),

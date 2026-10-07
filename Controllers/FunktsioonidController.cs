@@ -21,7 +21,11 @@ public class FunktsioonidController : Controller
     {
         if (id == null) return NotFound();
         var olem = await _kontekst.FunktsiooniUurimised.FirstOrDefaultAsync(f => f.Id == id);
-        return olem == null ? NotFound() : View(olem);
+        if (olem == null) return NotFound();
+
+        LisaAnalyys? lisa = null;
+        try { lisa = MathUtils.Lisa(olem.Valem); } catch { }
+        return View(new DetailideVaade { Uurimine = olem, Lisa = lisa });
     }
 
     // CREATE
@@ -106,6 +110,6 @@ public class FunktsioonidController : Controller
             ys.Add(MathUtils.Arvuta(f, x));
             dys.Add(MathUtils.Arvuta(d, x));
         }
-        return Json(new { x = xs, y = ys, dy = dys, tuletis = d.ToString() });
+        return Json(new { x = xs, y = ys, dy = dys, tuletis = MathUtils.Lihtsusta(d).ToString() });
     }
 }

@@ -29,3 +29,87 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+/* ---- Külgriba + sisu paigutus ---- */
+.app-paigutus {
+  display: flex;
+  align-items: flex-start;
+}
+
+.kylgriba {
+  flex: 0 0 290px;
+  width: 290px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  flex-direction: column;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-right: 1px solid #dee2e6;
+}
+
+@media (min-width: 768px) {
+  .kylgriba.d-md-block { display: flex !important; }
+}
+
+.kylgriba-otsing { flex: 0 0 auto; margin-bottom: .75rem; }
+.kylgriba-nimekiri { flex: 1 1 auto; min-height: 0; overflow-y: auto; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .85rem; }
+.kylgriba-nimekiri .list-group-item { background: transparent; word-break: break-all; }
+.kylgriba-nimekiri .list-group-item.active { background: #0d6efd; color: #fff; }
+.kylgriba-jalus { flex: 0 0 auto; padding-top: .75rem; }
+
+.sisu {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 1.5rem 2rem;
+}
+
+@media (max-width: 767.98px) {
+  .app-paigutus { display: block; }
+  .kylgriba { width: auto; height: auto; position: static; border-right: 0; border-bottom: 1px solid #dee2e6; }
+  .kylgriba.show { display: flex; }
+  .kylgriba-nimekiri { max-height: 40vh; }
+  .sisu { padding: 1rem; }
+}
+
+/* ---- Õpikulehe stiil ---- */
+.opik { max-width: 52rem; }
+.opik h2 { margin-top: 2.25rem; padding-top: .75rem; border-top: 1px solid #dee2e6; }
+.opik p, .opik li { line-height: 1.7; }
+.opik .valem-kast { background: #f1f5ff; border-left: 4px solid #0d6efd; padding: .5rem 1rem; margin: 1rem 0; }
+.opik .naide { background: #f6fbf6; border-left: 4px solid #198754; padding: .75rem 1rem; margin: 1rem 0; }
+
+/* ---- Lahenduskäik ---- */
+.lahendus > li { margin-bottom: 1.25rem; }
+.lahendus ul { margin-bottom: .5rem; }
+
+/* ---- v2: kinnine navigatsioon, külgriba nupp alati nähtav ---- */
+:root { --nav-h: 56px; }
+header .navbar { min-height: var(--nav-h); padding-top: .25rem; padding-bottom: .25rem; }
+.kylgriba { top: var(--nav-h); height: calc(100vh - var(--nav-h)); }
+@media (max-width: 767.98px) {
+  .kylgriba { top: auto; height: auto; }
+}
+
+/* ---- Graafik ---- */
+.graafik-konteiner { position: relative; width: 100%; height: clamp(240px, 45vh, 420px); }
+@media (min-width: 1200px) {
+  .graafik-paneel { position: sticky; top: calc(var(--nav-h) + 1rem); }
+  .graafik-konteiner { height: clamp(300px, calc(100vh - var(--nav-h) - 9rem), 520px); }
+}
+
+/* ---- Kompaktne analüüs ---- */
+.analuus { font-size: .875rem; }
+.analuus-rida { padding: .5rem 0; border-bottom: 1px solid #e9ecef; }
+.analuus-silt { font-weight: 600; font-size: .8rem; color: #495057; }
+.analuus-vaartus { font-family: ui-monospace, Menlo, Consolas, monospace; word-break: break-word; }
+.lahendus-kast { margin-top: .5rem; padding: .5rem .75rem; background: #f8f9fa; border-left: 3px solid #0d6efd; font-size: .82rem; }
+.lahendus-kast p { margin-bottom: .25rem; }
+.lahendus-kast ul { margin: .25rem 0 0; padding-left: 1.1rem; }
+.lahendus-kast li { word-break: break-word; }
+
+/* ---- Ilusad valemid ---- */
+.analuus .katex, .lahendus-kast .katex { font-size: 1.05em; }
+.analuus .katex-display { margin: .25rem 0; overflow-x: auto; overflow-y: hidden; padding-bottom: .25rem; }
+.analuus .katex-display > .katex { text-align: left; }
+.lahendus-kast { overflow-x: auto; }

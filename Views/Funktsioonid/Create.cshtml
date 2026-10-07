@@ -1,5 +1,5 @@
-﻿@model FunctionExplorer.Models.FunktsiooniVorm
-<h1>Uus funktsioon</h1>
+@model FunctionExplorer.Models.FunktsiooniVorm
+<h1 class="h3">Uus funktsioon</h1>
 <form asp-action="Create" method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="mb-3">
@@ -10,8 +10,9 @@
     <button class="btn btn-primary">Analüüsi ja salvesta</button>
     <button type="button" id="eelvaade" class="btn btn-secondary">Eelvaade</button>
     <a asp-action="Index" class="btn btn-link">Tagasi</a>
+
 </form>
-<canvas id="funktsiooniGraafik" width="600" height="400" class="mt-3"></canvas>
+<div class="graafik-konteiner mt-3"><canvas id="funktsiooniGraafik"></canvas></div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
