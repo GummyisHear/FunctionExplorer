@@ -42,8 +42,8 @@
 
         function liige() {
             let vasak = unaarne();
-            while (op('*') || op('/')) {
-                const tehe = t[p++].v;
+            while (op('*') || op('/') || (t[p] && (t[p].t === 'num' || t[p].t === 'id' || op('(')))) {
+                const tehe = (op('*') || op('/')) ? t[p++].v : '*';   // lausutud või vihjatud korrutamine (2x, x(x+1))
                 const parem = unaarne();
                 if (tehe === '*') {
                     const tegurid = vasak.k === 'mul' ? vasak.a.slice() : [vasak];
@@ -79,7 +79,7 @@
             if (x.t === 'num') { p++; return { k: 'num', v: x.v }; }
             if (x.t === 'id') {
                 p++;
-                if (op('(')) {
+                if (op('(') && x.v.length > 1) {
                     p++;
                     const args = [avaldis()];
                     while (op(',')) { p++; args.push(avaldis()); }
@@ -99,16 +99,19 @@
 
     // ---- LaTeX-i genereerimine ----
     const sulg = s => '\\left(' + s + '\\right)';
-    const onAatom = n => ['num', 'sym', 'call'].includes(n.k);
+    const onAatom = n => ['num', 'sym', 'call', 'raw'].includes(n.k);
 
-    const FUNKTSIOONID = { sin: '\\sin', cos: '\\cos', tan: '\\tan', cot: '\\cot', ln: '\\ln', log: '\\log',
-                           arcsin: '\\arcsin', arccos: '\\arccos', arctan: '\\arctan',
-                           sinh: '\\sinh', cosh: '\\cosh', tanh: '\\tanh' };
+    const FUNKTSIOONID = {
+        sin: '\\sin', cos: '\\cos', tan: '\\tan', cot: '\\cot', ln: '\\ln', log: '\\log',
+        arcsin: '\\arcsin', arccos: '\\arccos', arctan: '\\arctan',
+        sinh: '\\sinh', cosh: '\\cosh', tanh: '\\tanh'
+    };
     const KREEKA = { pi: '\\pi', alpha: '\\alpha', beta: '\\beta' };
 
     function e(n) {
         switch (n.k) {
             case 'num': return n.v;
+            case 'raw': return n.tex;
             case 'sym': return KREEKA[n.v.toLowerCase()] || (n.v.length === 1 ? n.v : '\\mathrm{' + n.v + '}');
             case 'neg': return '-' + (n.a.k === 'add' || n.a.k === 'neg' ? sulg(e(n.a)) : e(n.a));
             case 'add': {
@@ -166,5 +169,6 @@
     }
 
     global.valemLatexiks = valemLatexiks;
-    if (typeof module !== 'undefined') module.exports = { valemLatexiks, parsi };
+    global.valemLatex = { valemLatexiks, parsi, astLatex: e };
+    if (typeof module !== 'undefined') module.exports = { valemLatexiks, parsi, astLatex: e };
 })(typeof window !== 'undefined' ? window : globalThis);
