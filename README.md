@@ -159,35 +159,6 @@ GET /Funktsioonid/Punktid?valem=x^2&alates=-2&kuni=2&samm=1
 ```
 Punktides, kus funktsioon pole määratud, on väärtus `null`, ja graafik katkeb seal korrektselt.
 
-## 📁 Projekti struktuur
-
-```
-FunctionExplorer/
-├── Controllers/
-│   ├── FunktsioonidController.cs        # CRUD + Punktid API
-│   └── HomeController.cs                # avaleht teooriaga
-├── Utils/
-│   ├── MathUtils.cs                     # parsimine, tuletis, nullkohad, ekstreemumid
-│   └── MathUtils.Sammud.cs              # teine tuletis, kumerus, lahenduse sammud
-├── Models/
-│   ├── FunktsiooniUurimine.cs           # andmebaasi olem
-│   ├── FunktsiooniVorm.cs               # vormi mudel + valideerimine
-│   └── LisaAnalyys.cs                   # laiendatud analüüs ja sammud
-├── ViewComponents/
-│   └── FunktsioonideKylgribaViewComponent.cs   # külgriba
-├── Data/
-│   └── DataContext.cs                   # EF Core kontekst + näidisandmed
-├── Migrations/
-├── Views/
-├── wwwroot/js/
-│   ├── graafik.js                       # Chart.js graafik
-│   ├── valem-latex.js                   # valemi teisendamine LaTeX-iks
-│   ├── katex-init.js                    # KaTeX renderdamine
-│   └── kylgriba.js                      # külgriba otsing
-├── funktsioonid.db                      # SQLite andmebaas
-└── Program.cs
-```
-
 ## 💾 Andmemudel
 
 | Väli | Näide |
@@ -206,15 +177,3 @@ Andmebaasi asukoht määratakse failis `appsettings.json`:
 ```json
 "ConnectionStrings": { "Vaikimisi": "Data Source=funktsioonid.db" }
 ```
-
-## 🔮 Edasiarendused
-
-- [ ] kasutaja määratav nullkohtade otsingu vahemik
-- [ ] puutepunktis juurte (paarisarvulise kordsusega) usaldusväärne leidmine
-- [ ] asümptootide ja paarsuse automaatne määramine
-- [ ] analüüsi eksport PDF-i
-- [ ] ühiktestid `MathUtils` jaoks
-
-## 👤 Autor
-
-**GummyisHear** — [github.com/GummyisHear](https://github.com/GummyisHear)
