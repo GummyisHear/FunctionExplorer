@@ -15,6 +15,7 @@ function asendaValemid(juur) {
 document.addEventListener('DOMContentLoaded', () => {
     const sisu = document.querySelector('.sisu');
     if (!sisu) return;
+    try { if (window.lahendaja) window.lahendaja.taidaLahendused(document); } catch (e) { console.warn(e); }
     asendaValemid(sisu);
     if (!window.renderMathInElement) return;
     renderMathInElement(sisu, {

@@ -46,7 +46,7 @@ async function joonista(valem) {
         data: {
             datasets: [
                 { label: 'f(x) = ' + valem, data: [], segment: { borderColor: peidaPoolus }, borderColor: 'blue', borderWidth: 2, pointRadius: 0, pointHoverRadius: 5, tension: 0, spanGaps: false },
-                { label: "f'(x) = " + a.tuletis, data: [], segment: { borderColor: peidaPoolus }, borderColor: 'red', borderWidth: 1.5, borderDash: [5, 5], pointRadius: 0, pointHoverRadius: 4, tension: 0, spanGaps: false }
+                { label: "f'(x) = " + a.tuletis, data: [], hidden: true, segment: { borderColor: peidaPoolus }, borderColor: 'red', borderWidth: 1.5, borderDash: [5, 5], pointRadius: 0, pointHoverRadius: 4, tension: 0, spanGaps: false }
             ]
         },
         options: {

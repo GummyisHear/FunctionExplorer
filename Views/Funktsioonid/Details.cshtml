@@ -7,18 +7,20 @@
     List<string> L(params string[] s) => s.Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
 
     // (sildi tekst, väärtused, lahenduskäigu number lisa.Sammud listis)
-    var read = new List<(string Silt, List<string> Vaartused, int Samm)>
+    var read = new List<(string Silt, List<string> Vaartused, int Samm, string Voti)>
     {
-        ("Määramispiirkond", L(u.Maaramispiirkond), 0),
-        ("Nullkohad", L(u.Nullkohad), 1),
-        ("Tuletis f'(x)", L("$$⟦" + (lisa?.Tuletis ?? u.Tuletis) + "⟧$$"), 2),
-        ("Kriitilised punktid", L(u.KriitilisedPunktid), 3),
-        ("Kasvamine ja kahanemine", lisa?.KasvamineLuhike ?? new List<string>(), 4),
-        ("Ekstreemumid", u.Ekstreemumid.Split("; ").ToList(), 5),
-        ("Teine tuletis f''(x)", lisa == null ? new List<string>() : L("$$⟦" + lisa.TeineTuletis + "⟧$$"), 6),
-        ("Käänupunktid ja kumerus", lisa == null ? new List<string>() : L("Käänupunktid: " + lisa.Kaanupunktid).Concat(lisa.KumerusLuhike).ToList(), 7)
+        ("Määramispiirkond", L(u.Maaramispiirkond), 0, "maar"),
+        ("Nullkohad", L(u.Nullkohad), 1, "null"),
+        ("Tuletis f'(x)", L("$$⟦" + (lisa?.Tuletis ?? u.Tuletis) + "⟧$$"), 2, "tuletis"),
+        ("Kriitilised punktid", L(u.KriitilisedPunktid), 3, "krit"),
+        ("Kasvamine ja kahanemine", lisa?.KasvamineLuhike ?? new List<string>(), 4, "kasv"),
+        ("Ekstreemumid", u.Ekstreemumid.Split("; ").ToList(), 5, "ekstr"),
+        ("Teine tuletis f''(x)", lisa == null ? new List<string>() : L("$$⟦" + lisa.TeineTuletis + "⟧$$"), 6, "tuletis2"),
+        ("Käänupunktid ja kumerus", lisa == null ? new List<string>() : L("Käänupunktid: " + lisa.Kaanupunktid).Concat(lisa.KumerusLuhike).ToList(), 7, "kaan")
     };
 }
+
+<div data-lahendaja data-valem="@u.Valem" data-null="@u.Nullkohad" data-krit="@u.KriitilisedPunktid" hidden></div>
 
 <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
     <h1 class="h4 mb-0 me-auto">$f(x) = ⟦@(u.Valem)⟧$</h1>
@@ -41,10 +43,12 @@
                     <div class="d-flex justify-content-between align-items-start gap-2">
                         <div class="min-w-0">
                             <div class="analuus-silt">@r.Silt</div>
-                            @foreach (var v in r.Vaartused)
-                            {
-                                <div class="analuus-vaartus">@v</div>
-                            }
+                            <div class="analuus-valued" data-rida="@r.Voti">
+                                @foreach (var v in r.Vaartused)
+                                {
+                                    <div class="analuus-vaartus">@v</div>
+                                }
+                            </div>
                         </div>
                         @if (samm != null)
                         {
@@ -56,7 +60,7 @@
                     @if (samm != null)
                     {
                         <div class="collapse" id="samm-@i">
-                            <div class="lahendus-kast">
+                            <div class="lahendus-kast" data-samm="@r.Voti">
                                 <p>@samm.Selgitus</p>
                                 @if (samm.Read.Count > 0)
                                 {

@@ -101,11 +101,9 @@
     const sulg = s => '\\left(' + s + '\\right)';
     const onAatom = n => ['num', 'sym', 'call', 'raw'].includes(n.k);
 
-    const FUNKTSIOONID = {
-        sin: '\\sin', cos: '\\cos', tan: '\\tan', cot: '\\cot', ln: '\\ln', log: '\\log',
-        arcsin: '\\arcsin', arccos: '\\arccos', arctan: '\\arctan',
-        sinh: '\\sinh', cosh: '\\cosh', tanh: '\\tanh'
-    };
+    const FUNKTSIOONID = { sin: '\\sin', cos: '\\cos', tan: '\\tan', cot: '\\cot', ln: '\\ln', log: '\\log',
+                           arcsin: '\\arcsin', arccos: '\\arccos', arctan: '\\arctan',
+                           sinh: '\\sinh', cosh: '\\cosh', tanh: '\\tanh' };
     const KREEKA = { pi: '\\pi', alpha: '\\alpha', beta: '\\beta' };
 
     function e(n) {
@@ -132,7 +130,7 @@
                 let s = '';
                 tegurid.forEach((x, i) => {
                     let osa = (x.k === 'add' || x.k === 'neg') ? sulg(e(x)) : e(x);
-                    if (i > 0) s += (x.k === 'num') ? ' \\cdot ' : ' ';
+                    if (i > 0) s += (x.k === 'num' || (x.k === 'raw' && /^\d/.test(x.tex))) ? ' \\cdot ' : ' ';
                     s += osa;
                 });
                 return (miinus ? '-' : '') + s;

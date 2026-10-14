@@ -113,3 +113,9 @@ header .navbar { min-height: var(--nav-h); padding-top: .25rem; padding-bottom: 
 .analuus .katex-display { margin: .25rem 0; overflow-x: auto; overflow-y: hidden; padding-bottom: .25rem; }
 .analuus .katex-display > .katex { text-align: left; }
 .lahendus-kast { overflow-x: auto; }
+
+/* ---- Õpilase moodi lahendus ---- */
+.lahendus-kast .lv-valem { overflow-x: auto; overflow-y: hidden; margin: .15rem 0 .35rem; }
+.lahendus-kast .katex-display { margin: .35rem 0; }
+.lahendus-kast p { margin-bottom: .35rem; }
+.analuus-valued .katex-display { margin: .25rem 0; }

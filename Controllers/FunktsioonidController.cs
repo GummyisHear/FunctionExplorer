@@ -1,4 +1,4 @@
-﻿using FunctionExplorer.Data;
+using FunctionExplorer.Data;
 using FunctionExplorer.Models;
 using FunctionExplorer.Utils;
 using MathNet.Symbolics;
@@ -16,7 +16,7 @@ public class FunktsioonidController : Controller
     public async Task<IActionResult> Index() =>
         View(await _kontekst.FunktsiooniUurimised.OrderByDescending(f => f.LuodudAeg).ToListAsync());
 
-    // READ: details
+    // READ: details (koos lisaanalüüsiga: teine tuletis, käänupunktid, lahenduskäik)
     public async Task<IActionResult> Details(int? id)
     {
         if (id == null) return NotFound();

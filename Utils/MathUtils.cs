@@ -1,4 +1,4 @@
-﻿using FunctionExplorer.Models;
+using FunctionExplorer.Models;
 using MathNet.Symbolics;
 using System.Globalization;
 
@@ -19,6 +19,32 @@ public static partial class MathUtils
             return double.IsFinite(v) && Math.Abs(v) < 1e12 ? v : null;
         }
         catch { return null; }
+    }
+
+    // Väärtus ILMA suuruse piiranguta: määramispiirkonna kontrolliks
+    // (kiiresti kasvav funktsioon nagu e^x ei ole "määramata", kui väärtus ületab 1e12)
+    static double? Toor(SymbolicExpression e, double x)
+    {
+        try
+        {
+            var fp = e.Evaluate(new Dictionary<string, FloatingPoint> { { "x", x } });
+            var c = fp.ComplexValue;
+            if (Math.Abs(c.Imaginary) > 1e-12) return null;
+            return double.IsFinite(c.Real) ? c.Real : null;
+        }
+        catch { return null; }
+    }
+
+    // Kas f on punktis x määratud? Väga suur väärtus loetakse määramatuks ainult siis, kui see on
+    // naabrite kõrval hüppeliselt suur (asümptoot), mitte siis, kui funktsioon lihtsalt kasvab kiiresti.
+    static bool Maaratud(SymbolicExpression f, double x)
+    {
+        var v = Toor(f, x);
+        if (v == null) return false;
+        if (Math.Abs(v.Value) <= 1e12) return true;
+        var a = Toor(f, x - 0.05); var b = Toor(f, x + 0.05);
+        double naabrid = Math.Max(a == null ? 0 : Math.Abs(a.Value), b == null ? 0 : Math.Abs(b.Value));
+        return Math.Abs(v.Value) < 1e6 * Math.Max(1, naabrid);
     }
 
     public static SymbolicExpression Tuletis(SymbolicExpression f) => f.Differentiate(X);
@@ -63,18 +89,47 @@ public static partial class MathUtils
 
     static string Maaramispiirkond(SymbolicExpression f)
     {
+        const int N = 2000; const double a0 = -50, h = 0.05;
+        var xs = new double[N + 1]; var ys = new double?[N + 1];
+        for (int i = 0; i <= N; i++) { xs[i] = a0 + i * h; ys[i] = Toor(f, xs[i]); }
+
         var vahemikud = new List<(double a, double b)>();
+        var punktid = new List<double>();
+        void LisaVahemik(double a, double b) { if (b - a < 1e-9) punktid.Add(a); else vahemikud.Add((a, b)); }
+
         double? algus = null; double viimane = 0;
-        for (int i = 0; i <= 2000; i++)
+        for (int i = 0; i <= N; i++)
         {
-            double x = -50 + i * 0.05;
-            if (Arvuta(f, x) == null) { algus ??= x; viimane = x; }
-            else if (algus != null) { vahemikud.Add((algus.Value, viimane)); algus = null; }
+            if (!Maaratud(f, xs[i])) { algus ??= xs[i]; viimane = xs[i]; }
+            else if (algus != null) { LisaVahemik(algus.Value, viimane); algus = null; }
         }
-        if (algus != null) vahemikud.Add((algus.Value, viimane));
-        if (vahemikud.Count == 0) return "X: (-∞; ∞)";
-        return "X: määramata (skaneeritud [-50; 50]) vahemikes: " +
-               string.Join(", ", vahemikud.Select(v => $"[{Ar(v.a)}; {Ar(v.b)}]"));
+        if (algus != null) LisaVahemik(algus.Value, viimane);
+
+        // püstasümptoodid ruudustiku punktide VAHEL: märk vahetub ja |y| kasvab asümptoodi poole
+        for (int i = 1; i + 2 <= N; i++)
+        {
+            if (ys[i] == null || ys[i + 1] == null || ys[i]!.Value * ys[i + 1]!.Value >= 0) continue;
+            bool vasak = ys[i - 1] == null || Math.Abs(ys[i]!.Value) >= Math.Abs(ys[i - 1]!.Value);
+            bool parem = ys[i + 2] == null || Math.Abs(ys[i + 1]!.Value) >= Math.Abs(ys[i + 2]!.Value);
+            if (!vasak || !parem) continue;
+            double lo = xs[i], hi = xs[i + 1], flo = ys[i]!.Value;
+            for (int k = 0; k < 60; k++)
+            {
+                double m = (lo + hi) / 2; var fm = Toor(f, m); if (fm == null) break;
+                if (flo * fm.Value <= 0) hi = m; else { lo = m; flo = fm.Value; }
+            }
+            double pool = (lo + hi) / 2; var fp = Toor(f, pool);
+            double naabrid = Math.Max(Math.Abs(ys[i]!.Value), Math.Abs(ys[i + 1]!.Value));
+            if ((fp == null || Math.Abs(fp.Value) > 1e3 * naabrid) && !punktid.Any(p => Math.Abs(p - pool) < 0.06))
+                punktid.Add(pool);
+        }
+
+        if (vahemikud.Count == 0 && punktid.Count == 0) return "X: (-∞; ∞)";
+        var osad = new List<string>();
+        if (punktid.Count > 0) osad.Add("x ≠ " + string.Join("; ", punktid.OrderBy(p => p).Select(Ar)));
+        if (vahemikud.Count > 0)
+            osad.Add("määramata (skaneeritud [-50; 50]) vahemikes: " + string.Join(", ", vahemikud.Select(v => $"[{Ar(v.a)}; {Ar(v.b)}]")));
+        return "X: " + string.Join(", ", osad);
     }
 
     public static FunktsiooniUurimine Analuusi(string valem)
